@@ -1,33 +1,46 @@
 import React from 'react'
+import searchYouTube from 'youtube-search-api-with-axios';
 import SearchBar from './SearchBar'
-import youtube from '../api/youtube'
+// import youtube from '../api/youtube'
+import VideoList from './VideoList'
+import VideoDetail from './VideoDetail'
 
-const KEY  = 'AIzaSyDWBgtLkgIOqxAEyMkejsNeGolgV11p-do';
+const KEY  = 'AIzaSyB9YW_RZaZ2pencNd-pV8pd9Z7HHEHJ_LM';
 
 class App extends React.Component{
 
-    state = {videos: []};
+    state = {videos: [], selectedVideo: null};
+    // OnTermSubmit = async term => {
+    //     const response = await youtube.get("/search", {
+    //       params: {
+    //         q: term,
+    //         part: "snippet",
+    //         maxResults: 5,
+    //         type: 'video',
+    //         key: KEY
+    //       }
+    //     });
+    //     // console.log(response.data.items);
+    //     this.setState({ videos:response.data.items});
+    // };
+
+
     OnTermSubmit = async term => {
-        const response = await youtube.get("/search", {
-          params: {
-            q: term,
-            part: "snippet",
-            maxResults: 5,
-            type: 'video',
-            key: KEY
-          }
-        });
-        // console.log(response.data.items);
-        this.setState({ videos:response.data.items});
+      searchYouTube({key: KEY, term: term, maxResults: 5}, (response)=>{
+        this.setState({ videos:response});
+    });    
     };
 
-
+    onVideoSelect = (video) => {
+        this.setState({selectedVideo:video});
+    }; 
 
     render(){
         return(
             <div className="ui container">
                 <SearchBar OnTermSubmit= {this.OnTermSubmit}/>
-                I have {this.state.videos.length} videos.
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect}/>
             </div>
         );
     }
