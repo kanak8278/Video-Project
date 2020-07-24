@@ -26,7 +26,7 @@ class App extends React.Component{
 
 
     OnTermSubmit = async term => {
-      searchYouTube({key: KEY, term: term, maxResults: 5}, (response)=>{
+      searchYouTube({key: KEY, q: term, maxResults: 5}, (response)=>{
         this.setState({ videos:response});
     });    
     };
