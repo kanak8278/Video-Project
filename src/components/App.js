@@ -24,10 +24,16 @@ class App extends React.Component{
     //     this.setState({ videos:response.data.items});
     // };
 
+    componentDidMount() {
+        this.OnTermSubmit('deep mind|alpha-go')
+    }
 
     OnTermSubmit = async term => {
       searchYouTube({key: KEY, q: term, maxResults: 5}, (response)=>{
-        this.setState({ videos:response});
+        this.setState({
+            videos:response,
+            selectedVideo: response[0]
+        });
     });    
     };
 
@@ -39,8 +45,17 @@ class App extends React.Component{
         return(
             <div className="ui container">
                 <SearchBar OnTermSubmit= {this.OnTermSubmit}/>
-                <VideoDetail video={this.state.selectedVideo} />
-                <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect}/>
+                <div className="ui grid">
+                    <div className="ui row">
+                        <div className="ten wide column">
+                            <VideoDetail video={this.state.selectedVideo} />
+                        </div>
+                        <div className="six wide column">
+                            <VideoList videos={this.state.videos} onVideoSelect={this.onVideoSelect}/>
+                        </div>
+
+                    </div>
+                </div>
             </div>
         );
     }
